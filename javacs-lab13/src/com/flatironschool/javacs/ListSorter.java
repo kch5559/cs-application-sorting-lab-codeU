@@ -64,7 +64,57 @@ public class ListSorter<T> {
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+        return mergeSortHelper(list,  comparator);
+	}
+
+	private List<T> mergeSortHelper(List<T> list ,Comparator<T> comparator) {
+
+		int size = list.size();
+
+		//when the list has more than 2 elements
+		if(size >= 2) {
+
+			List<T> leftList = mergeSortHelper(new ArrayList<T>(list.subList(0, size/2)), comparator);
+			List<T> rightList = mergeSortHelper(new ArrayList<T>(list.subList(size/2, size)), comparator);
+
+			return merge(leftList, rightList, comparator);
+		}
+
+		return list;
+	}
+
+	private List<T> merge(List<T> leftList, List<T> rightList, Comparator<T> comparator){
+
+		List<T> result = new ArrayList<T>();
+
+		int leftListCursor = 0;
+		int rightListCursor = 0;
+
+		while(leftListCursor < leftList.size() && rightListCursor < rightList.size()) {
+
+			if(comparator.compare(leftList.get(leftListCursor), rightList.get(rightListCursor)) < 0) {
+				result.add(leftList.get(leftListCursor));
+				leftListCursor++;
+			}else {
+				result.add(rightList.get(rightListCursor));
+				rightListCursor++;
+			}
+		}
+
+		//remaining
+
+		while(leftListCursor < leftList.size()) {
+			result.add(leftList.get(leftListCursor));
+			leftListCursor++;
+		}
+
+		while(rightListCursor < rightList.size()) {
+			result.add(rightList.get(rightListCursor));
+			rightListCursor++;
+		}
+
+		return result;
+
 	}
 
 	/**
@@ -76,6 +126,18 @@ public class ListSorter<T> {
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
+		PriorityQueue<T> heap = new PriorityQueue<T>(list.size(), comparator);
+
+		for(T element : list) {
+			heap.add(element);
+		}
+
+		list.clear();
+
+		while(!heap.isEmpty()) {
+			list.add(heap.poll());
+		}
+
 	}
 
 	
@@ -89,8 +151,20 @@ public class ListSorter<T> {
 	 * @return
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
+
         // FILL THIS IN!
-        return null;
+
+		heapSort(list, comparator);
+		List<T> result = new ArrayList<T>();
+
+
+		//System.out.println(k + " largest numbers");
+		for(int i = list.size()-k;  i < list.size(); i++) {
+			//System.out.println(list.get(i));
+			result.add(list.get(i));
+		}
+
+        return result;
 	}
 
 	
